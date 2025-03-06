@@ -4,7 +4,6 @@ import { Key, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { revalidatePath } from "next/cache";
 
 type Gathering = {
   id: number;
@@ -40,10 +39,14 @@ export default function ListDetails() {
   useEffect(() => {
     fetchGatherings();
 
-    const handleRegistrationUpdate = () => {
+    const handleRegistrationUpdate = async () => {
       console.log("Registration update detected, refreshing list...");
-      revalidatePath("/");
-      fetchGatherings();
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await fetchGatherings();
+      setTimeout(async () => {
+        await fetchGatherings();
+      }, 3000);
     };
     window.addEventListener("registration-updated", handleRegistrationUpdate);
 
