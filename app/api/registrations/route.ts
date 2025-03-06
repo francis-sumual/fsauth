@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
@@ -10,6 +11,7 @@ export async function GET() {
         group: true,
       },
     });
+    revalidatePath("/");
     // Ensure we always return an array
     return NextResponse.json(Array.isArray(registrations) ? registrations : []);
   } catch (error) {
