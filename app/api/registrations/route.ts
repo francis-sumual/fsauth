@@ -12,6 +12,8 @@ export async function GET() {
       },
     });
     revalidatePath("/");
+    revalidatePath("/registration");
+    revalidatePath("/gatherings/with-registrations");
     // Ensure we always return an array
     return NextResponse.json(Array.isArray(registrations) ? registrations : []);
   } catch (error) {
