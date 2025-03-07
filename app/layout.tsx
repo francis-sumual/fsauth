@@ -11,9 +11,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "AuthJs",
-  description: "next 15 auth",
+  description: "next 14 auth",
 };
-export const fetchCache = "force-no-store";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

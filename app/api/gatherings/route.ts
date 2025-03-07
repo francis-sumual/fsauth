@@ -15,6 +15,8 @@ export async function GET() {
       },
     });
     revalidatePath("/");
+    revalidatePath("/registrations");
+    revalidatePath("/gatherings/with-registrations");
     return NextResponse.json(gatherings);
   } catch (error) {
     console.error("Error fetching gatherings:", error);

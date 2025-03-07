@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { revalidatePath } from "next/cache";
 
 type Group = {
   id: number;
@@ -63,7 +64,7 @@ export function RegistrationSection() {
   const fetchGatherings = async () => {
     try {
       setIsLoadingGatherings(true);
-      const response = await fetch("/api/gatherings");
+      const response = await fetch("/api/gatherings", { cache: "no-store" });
       if (!response.ok) throw new Error("Failed to fetch gatherings");
       const data = await response.json();
       // Filter only active gatherings that aren't full
@@ -82,7 +83,7 @@ export function RegistrationSection() {
   const fetchGroups = async () => {
     try {
       setIsLoadingGroups(true);
-      const response = await fetch("/api/groups");
+      const response = await fetch("/api/groups", { cache: "no-store" });
       if (!response.ok) throw new Error("Failed to fetch groups");
       const data = await response.json();
       setGroups(data);
@@ -96,7 +97,7 @@ export function RegistrationSection() {
 
   const fetchRegistrations = async () => {
     try {
-      const response = await fetch("/api/registrations");
+      const response = await fetch("/api/registrations", { cache: "no-store" });
       if (!response.ok) throw new Error("Failed to fetch registrations");
       const data = await response.json();
       setRegistrations(data);
@@ -108,7 +109,7 @@ export function RegistrationSection() {
   const fetchMembers = async (groupId: string) => {
     try {
       setIsLoadingMembers(true);
-      const response = await fetch(`/api/members?groupId=${groupId}`);
+      const response = await fetch(`/api/members?groupId=${groupId}`, { cache: "no-store" });
       if (!response.ok) throw new Error("Failed to fetch members");
       const data = await response.json();
       setMembers(data);
@@ -180,7 +181,9 @@ export function RegistrationSection() {
         const data = await response.json();
         throw new Error(data.error || "Failed to register");
       }
-
+      revalidatePath("/");
+      revalidatePath("/registrations");
+      revalidatePath("/gatherings/with-registrations");
       setStatus("success");
       // Trigger a refresh of the registration list by updating lastUpdate
       const event = new CustomEvent("registration-updated");
